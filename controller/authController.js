@@ -1,5 +1,5 @@
 const User = require("../model/userMode")
-const bcrypt = require("bcrypt")
+const bcrypt = require('bcryptjs');
 const jwt = require("jsonwebtoken")
 const nodemailer = require("nodemailer")
 
@@ -14,7 +14,8 @@ const RegisterUser = async (req, res) => {
             })
         }
 
-        const hashpassword = await bcrypt.hash(password, 12);
+        var salt = bcrypt.genSaltSync(12);
+        const hashpassword = await bcrypt.hashSync(password, salt);
         const newUser = await User.create({ name, email, password: hashpassword });
         await newUser.save();
 
@@ -43,7 +44,7 @@ const Login = async (req, res) => {
             })
         }
 
-        const passwordCheck = await bcrypt.compare(password, user.password);
+        const passwordCheck = await bcrypt.compareSync(password, user.password);
         if (!passwordCheck) {
             return res.status(400).json({
                 message: "email / password is not valid",
