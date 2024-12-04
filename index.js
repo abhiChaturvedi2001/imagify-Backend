@@ -18,6 +18,10 @@ app.use(cookieParser())
 app.use(cors(options));
 app.use("/auth", authRouter)
 
+app.get("/", (req, res) => {
+    res.send("hello ")
+})
+
 
 const port = process.env.PORT || 8000
 connectDb().then(() => {
