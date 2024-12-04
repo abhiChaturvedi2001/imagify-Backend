@@ -9,7 +9,7 @@ const authRouter = require("./routes/authRoutes")
 const app = express();
 dotenv.config({})
 const options = {
-    origin: "http://localhost:5173",
+    origin: "https://imagify-vert-eight.vercel.app",
     credentials: true
 }
 
