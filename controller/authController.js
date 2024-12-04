@@ -139,7 +139,10 @@ const sendOTP = async (req, res) => {
         const token = await jwt.sign({ _id: user?._id, email: user.email }, process.env.JWT_SECRET1, {
             expiresIn: "15m"
         })
-        return res.status(200).cookie("token", token, { maxAge: 15 * 60 * 1000 }).json({
+        return res.status(200).cookie("token", token, {
+            maxAge: 15 * 60 * 1000, secure: process.env.NODE_ENV === 'production', // Enable for HTTPS in production
+            sameSite: 'None'
+        }).json({
             success: true,
             message: 'OTP sent to your email',
         });
