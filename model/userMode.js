@@ -22,6 +22,12 @@ const userSchema = new mongoose.Schema({
     profile: {
         type: String,
         default: "https://cdn.vectorstock.com/i/500p/06/98/account-avatar-icon-in-line-design-vector-54270698.jpg"
+    },
+    otp: {
+        type: Number
+    },
+    otpExpires: {
+        type: Date
     }
 })
 
