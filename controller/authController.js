@@ -141,9 +141,9 @@ const sendOTP = async (req, res) => {
             expiresIn: "15m"
         })
         return res.status(200).cookie("token2", token, {
-            maxAge: 15 * 60 * 1000, // 15 minutes
-            httpOnly: true,         // Prevent access from client-side JavaScript
-            secure: process.env.NODE_ENV === "production", // Use Secure flag in production
+            expires: new Date(Date.now() + 15 * 60 * 1000),
+            httpOnly: true,        
+            secure: process.env.NODE_ENV === "production", 
             sameSite: "None",
         }).json({
             success: true,
