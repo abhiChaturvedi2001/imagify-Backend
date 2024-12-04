@@ -37,30 +37,31 @@ const Login = async (req, res) => {
     try {
         const { email, password } = req.body
         const user = await User.findOne({ email });
+
         if (!user) {
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "email / password is not valid",
                 success: false
             })
         }
 
         const passwordCheck = await bcrypt.compareSync(password, user.password);
+
         if (!passwordCheck) {
-            return res.status(400).json({
+            return res.status(401).json({
                 message: "email / password is not valid",
                 success: false
             })
         }
 
-        const token = await jwt.sign({ _id: user?._id }, "sdfghj2345678", {
+        const token = await jwt.sign({ _id: user?._id }, process.env.JWT_SECRET2, {
             expiresIn: "1d"
         })
 
-        return res.status(200).cookie("token", token).json({
+        return res.status(200).cookie("token1", token).json({
             message: "logged in successfully",
             success: true,
             user,
-            token
         })
 
     } catch (error) {
@@ -107,7 +108,7 @@ const sendEmail = async (userEmail, text) => {
             from: process.env.EMAIL_USER,
             to: userEmail,
             subject: "OTP for Reset Password",
-            text,
+            text
         };
 
         await transporter.sendMail(mailOptions);
@@ -139,7 +140,7 @@ const sendOTP = async (req, res) => {
         const token = await jwt.sign({ _id: user?._id, email: user.email }, process.env.JWT_SECRET1, {
             expiresIn: "15m"
         })
-        return res.status(200).cookie("token", token, {
+        return res.status(200).cookie("token2", token, {
             maxAge: 15 * 60 * 1000, secure: process.env.NODE_ENV === 'production', // Enable for HTTPS in production
             sameSite: 'None'
         }).json({
@@ -206,6 +207,11 @@ const resetPassword = async (req, res) => {
                 message: "User not found",
             });
         }
+
+
+        res.cookie("token2", null, {
+            expires: new Date(0),
+        });
 
         return res.status(200).json({
             success: true,

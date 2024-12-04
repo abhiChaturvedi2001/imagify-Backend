@@ -4,12 +4,13 @@ const cors = require("cors");
 const connectDb = require("./DB/db")
 const cookieParser = require('cookie-parser')
 const authRouter = require("./routes/authRoutes")
+const userRouter = require("./routes/userRoutes")
 
 // middleware
 const app = express();
 dotenv.config({})
 const options = {
-    origin: "https://imagify-vert-eight.vercel.app",
+    origin: process.env.BASE_URL,
     credentials: true
 }
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(cookieParser())
 app.use(cors(options));
 app.use("/auth", authRouter)
+app.use("/user", userRouter)
 
 app.get("/", (req, res) => {
     res.send("hello ")
